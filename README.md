@@ -18,7 +18,7 @@ The server can be configured with the following arguments:
 
 - `--project` (required): The GCP project ID.
 - `--location` (required): The GCP location (e.g. `europe-west9`).
-- `--dataset` (optional): Only take specific BigQuery datasets into consideration. Several datasets can be specified by repeating the argument (e.g. `--dataset my_dataset_1 --dataset my_dataset_2`). If not provided, all tables in the project will be considered.
+- `--dataset` (optional): Only take specific BigQuery datasets into consideration. Several datasets can be specified by repeating the argument (e.g. `--dataset my_dataset_1 --dataset my_dataset_2`). If not provided, all datasets in the project will be considered.
 
 ## Quickstart
 
@@ -29,44 +29,42 @@ The server can be configured with the following arguments:
 On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
-<details>
-  <summary>Development/Unpublished Servers Configuration</summary>
-  ```
-  "mcpServers": {
-    "bigquery": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "{{PATH_TO_REPO}}",
-        "run",
-        "mcp-server-bigquery",
-        "--project",
-        "{{GCP_PROJECT_ID}}",
-        "--location",
-        "{{GCP_LOCATION}}"
-      ]
-    }
-  }
-  ```
-</details>
+##### Development/Unpublished Servers Configuration</summary>
 
-<details>
-  <summary>Published Servers Configuration</summary>
-  ```
-  "mcpServers": {
-    "bigquery": {
-      "command": "uvx",
-      "args": [
-        "mcp-server-bigquery",
-        "--project",
-        "{{GCP_PROJECT_ID}}",
-        "--location",
-        "{{GCP_LOCATION}}"
-      ]
-    }
+```json
+"mcpServers": {
+  "bigquery": {
+    "command": "uv",
+    "args": [
+      "--directory",
+      "{{PATH_TO_REPO}}",
+      "run",
+      "mcp-server-bigquery",
+      "--project",
+      "{{GCP_PROJECT_ID}}",
+      "--location",
+      "{{GCP_LOCATION}}"
+    ]
   }
-  ```
-</details>
+}
+```
+
+##### Published Servers Configuration
+
+```json
+"mcpServers": {
+  "bigquery": {
+    "command": "uvx",
+    "args": [
+      "mcp-server-bigquery",
+      "--project",
+      "{{GCP_PROJECT_ID}}",
+      "--location",
+      "{{GCP_LOCATION}}"
+    ]
+  }
+}
+```
 
 Replace `{{PATH_TO_REPO}}`, `{{GCP_PROJECT_ID}}`, and `{{GCP_LOCATION}}` with the appropriate values.
 
