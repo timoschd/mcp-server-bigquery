@@ -5,7 +5,7 @@ from mcp.server.models import InitializationOptions
 import mcp.types as types
 from mcp.server import NotificationOptions, Server
 import mcp.server.stdio
-from typing import Any
+from typing import Any, Optional
 
 # Set up logging to both stdout and file
 logger = logging.getLogger('mcp_bigquery_server')
@@ -27,15 +27,16 @@ logger.setLevel(logging.DEBUG)
 logger.info("Starting MCP BigQuery Server")
 
 class BigQueryDatabase:
-    def __init__(self, project: str, location: str, key_file: str, datasets_filter: list[str]):
+    def __init__(self, project: str, location: str, key_file: Optional[str], datasets_filter: list[str]):
         """Initialize a BigQuery database client"""
+        logger.info(f"Initializing BigQuery client for project: {project}, location: {location}, key_file: {key_file}")
         if not project:
             raise ValueError("Project is required")
         if not location:
             raise ValueError("Location is required")
-        if not key_file:
-            self.client = bigquery.Client(project=project, location=location)
-        else:
+        
+        credentials: service_account.Credentials | None = None
+        if key_file:
             try:
                 credentials_path = key_file
                 credentials = service_account.Credentials.from_service_account_file(
@@ -45,7 +46,8 @@ class BigQueryDatabase:
             except Exception as e:
                 logger.error(f"Error loading service account credentials: {e}")
                 raise ValueError(f"Invalid key file: {e}")
-            self.client = bigquery.Client(credentials=credentials, project=project, location=location)
+
+        self.client = bigquery.Client(credentials=credentials, project=project, location=location)
         self.datasets_filter = datasets_filter
 
     def execute_query(self, query: str, params: dict[str, Any] | None = None) -> list[dict[str, Any]]:
@@ -106,7 +108,7 @@ class BigQueryDatabase:
             bigquery.ScalarQueryParameter("table_name", "STRING", table_id),
         ])
 
-async def main(project: str, location: str, key_file:str, datasets_filter: list[str]):
+async def main(project: str, location: str, key_file: Optional[str], datasets_filter: list[str]):
     logger.info(f"Starting BigQuery MCP Server with project: {project} and location: {location}")
 
     db = BigQueryDatabase(project, location, key_file, datasets_filter)
