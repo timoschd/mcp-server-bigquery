@@ -21,6 +21,7 @@ The server can be configured with the following arguments:
 - `--project` (required): The GCP project ID.
 - `--location` (required): The GCP location (e.g. `europe-west9`).
 - `--dataset` (optional): Only take specific BigQuery datasets into consideration. Several datasets can be specified by repeating the argument (e.g. `--dataset my_dataset_1 --dataset my_dataset_2`). If not provided, all datasets in the project will be considered.
+- `--key-file` (optional): Path to a service account key file for BigQuery. If not provided, the server will use the default credentials.
 
 ## Quickstart
 
