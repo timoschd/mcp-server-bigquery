@@ -87,13 +87,15 @@ Replace `{{PATH_TO_REPO}}`, `{{GCP_PROJECT_ID}}`, and `{{GCP_LOCATION}}` with th
 
 To prepare the package for distribution:
 
-1. Sync dependencies and update lockfile:
+1. Increase the version number in `pyproject.toml`
+
+2. Sync dependencies and update lockfile:
 
 ```bash
 uv sync
 ```
 
-2. Build package distributions:
+3. Build package distributions:
 
 ```bash
 uv build
@@ -101,7 +103,7 @@ uv build
 
 This will create source and wheel distributions in the `dist/` directory.
 
-3. Publish to PyPI:
+4. Publish to PyPI:
 
 ```bash
 uv publish
