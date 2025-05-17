@@ -16,12 +16,14 @@ The server implements one tool:
 
 ## Configuration
 
-The server can be configured with the following arguments:
+The server can be configured either with command line arguments or environment variables.
 
-- `--project` (required): The GCP project ID.
-- `--location` (required): The GCP location (e.g. `europe-west9`).
-- `--dataset` (optional): Only take specific BigQuery datasets into consideration. Several datasets can be specified by repeating the argument (e.g. `--dataset my_dataset_1 --dataset my_dataset_2`). If not provided, all datasets in the project will be considered.
-- `--key-file` (optional): Path to a service account key file for BigQuery. If not provided, the server will use the default credentials.
+| Argument     | Environment Variable | Required | Description                                                                                                                                                                                                                                                                                                                                                    |
+| ------------ | -------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--project`  | `BIGQUERY_PROJECT`   | Yes      | The GCP project ID.                                                                                                                                                                                                                                                                                                                                            |
+| `--location` | `BIGQUERY_LOCATION`  | Yes      | The GCP location (e.g. `europe-west9`).                                                                                                                                                                                                                                                                                                                        |
+| `--dataset`  | `BIGQUERY_DATASETS`  | No       | Only take specific BigQuery datasets into consideration. Several datasets can be specified by repeating the argument (e.g. `--dataset my_dataset_1 --dataset my_dataset_2`) or by joining them with a comma in the environment variable (e.g. `BIGQUERY_DATASETS=my_dataset_1,my_dataset_2`). If not provided, all datasets in the project will be considered. |
+| `--key-file` | `BIGQUERY_KEY_FILE`  | No       | Path to a service account key file for BigQuery. If not provided, the server will use the default credentials.                                                                                                                                                                                                                                                 |
 
 ## Quickstart
 
@@ -85,13 +87,15 @@ Replace `{{PATH_TO_REPO}}`, `{{GCP_PROJECT_ID}}`, and `{{GCP_LOCATION}}` with th
 
 To prepare the package for distribution:
 
-1. Sync dependencies and update lockfile:
+1. Increase the version number in `pyproject.toml`
+
+2. Sync dependencies and update lockfile:
 
 ```bash
 uv sync
 ```
 
-2. Build package distributions:
+3. Build package distributions:
 
 ```bash
 uv build
@@ -99,7 +103,7 @@ uv build
 
 This will create source and wheel distributions in the `dist/` directory.
 
-3. Publish to PyPI:
+4. Publish to PyPI:
 
 ```bash
 uv publish
