@@ -93,11 +93,11 @@ class BigQueryDatabase:
         logger.debug(f"Describing table: {table_name}")
 
         parts = table_name.split(".")
-        if len(parts) != 2:
+        if len(parts) != 2 and len(parts) != 3:
             raise ValueError(f"Invalid table name: {table_name}")
 
-        dataset_id = parts[0]
-        table_id = parts[1]
+        dataset_id = ".".join(parts[:-1])
+        table_id = parts[-1]
 
         query = f"""
             SELECT ddl
