@@ -18,7 +18,7 @@ def main():
     project = args.project or os.environ.get('BIGQUERY_PROJECT')
     location = args.location or os.environ.get('BIGQUERY_LOCATION')
     key_file = args.key_file or os.environ.get('BIGQUERY_KEY_FILE')
-    
+   
     datasets_filter = args.dataset if args.dataset else []
     if not datasets_filter and 'BIGQUERY_DATASETS' in os.environ:
         datasets_filter = os.environ.get('BIGQUERY_DATASETS', '').split(',')

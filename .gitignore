@@ -11,3 +11,6 @@ wheels/
 
 # IJ files
 .idea
+
+# Secrets directory
+secrets/
