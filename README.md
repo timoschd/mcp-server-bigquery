@@ -1,7 +1,7 @@
 # BigQuery MCP server
 
 [![Build and Push to Docker Hub](https://github.com/timoschd/mcp-server-bigquery/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/timoschd/mcp-server-bigquery/actions/workflows/docker-publish.yml)
-[![Docker Hub](https://img.shields.io/docker/v/timoschd/mcp-server-bigquery?label=Docker%20Hub&logo=docker)](https://hub.docker.com/r/timoschd/mcp-server-bigquery)
+[![Docker Hub](https://img.shields.io/badge/Docker%20Hub-timoschd%2Fmcp--server--bigquery-blue?logo=docker)](https://hub.docker.com/r/timoschd/mcp-server-bigquery)
 
 A Model Context Protocol server that provides access to BigQuery. This server enables LLMs to inspect database schemas and execute queries.
 
