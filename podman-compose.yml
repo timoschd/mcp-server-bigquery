@@ -5,11 +5,13 @@ services:
     build: .
     container_name: mcp-server-bigquery
     ports:
-      - "${PORT:-8085}:8085"
+      - "${PORT:-8085}:8080"
     environment:
-      - BIGQUERY_PROJECT=${BIGQUERY_PROJECT:-data-warehouse-414312}
+      - BIGQUERY_PROJECT=${BIGQUERY_PROJECT:-data-warehouse}
       - BIGQUERY_LOCATION=${BIGQUERY_LOCATION:-europe-west4}
       - BIGQUERY_KEY_FILE=${BIGQUERY_KEY_FILE:-}
+      - MCP_TRANSPORT=${MCP_TRANSPORT:-http}
+      - PORT=8080
 
     volumes:
       - ./src:/app/src
