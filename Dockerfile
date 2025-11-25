@@ -20,6 +20,11 @@ RUN uv sync --frozen --no-dev
 # Runtime stage
 FROM python:3.12-slim
 
+# add labels
+LABEL author="Tim M. Schendzielorz <docker@tim.schendzielorz.com>"
+LABEL version="0.3.0"
+LABEL description="A Model Context Protocol server that provides access to BigQuery. This server enables LLMs to inspect database schemas and execute queries."
+
 # Create non-root user
 RUN groupadd -r mcpuser && useradd -r -g mcpuser -u 1000 mcpuser
 
