@@ -1,6 +1,6 @@
 [project]
 name = "mcp-server-bigquery"
-version = "0.3.1"
+version = "0.1.0"
 description = "A Model Context Protocol server that provides access to BigQuery. This server enables LLMs to inspect database schemas and execute queries."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -9,12 +9,15 @@ dependencies = [
  "mcp>=1.0.0",
 ]
 [[project.authors]]
-name = "Lucas Hild"
-email = "lucas.hild@smithery.ai"
+name = "Tim M. Scendzielorz"
+email = "info@tim.schendzielorz.coms"
 
 [build-system]
 requires = [ "hatchling",]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcp_server_bigquery"]
 
 [project.scripts]
 mcp-server-bigquery = "mcp_server_bigquery:main"

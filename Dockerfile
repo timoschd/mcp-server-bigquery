@@ -1,30 +1,50 @@
-# Use official Python image
-FROM python:3.12-slim as base
+# Build stage
+FROM python:3.12-slim as builder
+
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Set working directory
 WORKDIR /app
 
-# Install Poetry
-RUN pip install --upgrade pip \
-    && pip install poetry
+# Copy dependency files
+COPY pyproject.toml uv.lock ./
 
-# Copy pyproject.toml and poetry.lock for dependency installation
-COPY pyproject.toml poetry.lock ./
-
-
-
-# Add the rest of the project source code
+# Add source code
 ADD src /app/src
 RUN touch ./README.md
 
-# If you need to install the project as a package, uncomment the following:
-RUN poetry install --no-interaction --no-ansi --only main
+# Install dependencies and build the project
+RUN uv sync --frozen --no-dev
 
+# Runtime stage
+FROM python:3.12-slim
+
+# Create non-root user
+RUN groupadd -r mcpuser && useradd -r -g mcpuser -u 1000 mcpuser
+
+# Set working directory
+WORKDIR /app
+
+# Copy only the virtual environment and source from builder
+COPY --from=builder --chown=mcpuser:mcpuser /app/.venv /app/.venv
+COPY --from=builder --chown=mcpuser:mcpuser /app/src /app/src
+
+# Set environment to use the virtual environment
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Set default transport to stdio (can be overridden with MCP_TRANSPORT env var)
+ENV MCP_TRANSPORT=stdio
+
+# Switch to non-root user
+USER mcpuser
 
 WORKDIR /app/src
 
 # Define the entry point
-ENTRYPOINT ["poetry", "run", "mcp-server-bigquery"]
+ENTRYPOINT ["mcp-server-bigquery"]
 
-# Example command
-# CMD ["--project", "your-gcp-project-id", "--location", "your-gcp-location"]
+# Example commands:
+# For stdio: CMD []
+# For HTTP: Set MCP_TRANSPORT=http and optionally PORT=8080
+# CMD ["--transport", "http", "--port", "8080"]
