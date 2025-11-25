@@ -10,31 +10,36 @@ Configure these in your GitHub repository: **Settings → Secrets and variables 
 
 Required for the `docker-publish.yml` workflow:
 
-| Secret Name          | Description                    | How to Get                                                                                      |
-| -------------------- | ------------------------------ | ----------------------------------------------------------------------------------------------- |
-| `DOCKERHUB_USERNAME` | Your Docker Hub username       | Your Docker Hub account username                                                                |
-| `DOCKERHUB_TOKEN`    | Docker Hub access token        | Docker Hub → Account Settings → Security → New Access Token (with Read, Write, Delete permissions) |
+| Secret Name          | Description                              | How to Get                                                                                      |
+| -------------------- | ---------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `DOCKERHUB_USERNAME` | Your Docker Hub username                 | Your Docker Hub account username                                                                |
+| `DOCKERHUB_TOKEN`    | Docker Hub access token (for image push) | Docker Hub → Account Settings → Security → New Access Token (with Read & Write permissions)    |
+| `DOCKERHUB_PASSWORD` | Your Docker Hub password (for README sync) | Your actual Docker Hub account password (required for README updates via API)                 |
+
+**Note**: The README sync feature requires your actual password due to Docker Hub API limitations. If you prefer not to store your password, you can remove the "Update Docker Hub description" step from the workflow and manually update the README on Docker Hub's website.
 
 ### For Cloud Run Deployment (Workload Identity Federation - Recommended)
 
-| Secret Name           | Description                                              | How to Get                                                                                                                           |
-| --------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `GCP_PROJECT_ID`      | Your GCP project ID                                      | `gcloud config get-value project`                                                                                                    |
-| `WIF_PROVIDER`        | Workload Identity Federation provider resource name     | Format: `projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_NAME/providers/PROVIDER_NAME`                           |
-| `WIF_SERVICE_ACCOUNT` | Service account email for Workload Identity Federation  | Format: `SERVICE_ACCOUNT_NAME@PROJECT_ID.iam.gserviceaccount.com`                                                                    |
-| `BIGQUERY_PROJECT`    | BigQuery project ID (can be same or different from GCP) | Your BigQuery project ID                                                                                                             |
-| `BIGQUERY_LOCATION`   | BigQuery location/region                                 | e.g., `us-central1`, `europe-west4`, `asia-northeast1`                                                                               |
+| Name                  | Type | Description                                              | How to Get                                                                                                                           |
+| --------------------- | ---- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `GCP_PROJECT_ID`      | Variable | Your GCP project ID                                      | `gcloud config get-value project`                                                                                                    |
+| `WIF_PROVIDER`        | Secret | Workload Identity Federation provider resource name     | Format: `projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL_NAME/providers/PROVIDER_NAME`                           |
+| `WIF_SERVICE_ACCOUNT` | Secret | Service account email for Workload Identity Federation  | Format: `SERVICE_ACCOUNT_NAME@PROJECT_ID.iam.gserviceaccount.com`                                                                    |
+| `BIGQUERY_PROJECT`    | Variable | BigQuery project ID (can be same or different from GCP) | Your BigQuery project ID                                                                                                             |
+| `BIGQUERY_LOCATION`   | Variable | BigQuery location/region                                 | e.g., `us-central1`, `europe-west4`, `asia-northeast1`                                                                               |
+
+**Note**: Project IDs and locations are not sensitive and can be stored as **Variables** instead of **Secrets** for better visibility. Go to **Settings → Secrets and variables → Actions → Variables tab** to add them.
 
 ### For Service Account Key (Alternative)
 
 If not using Workload Identity Federation, use these instead:
 
-| Secret Name         | Description                          | How to Get                                                                                      |
-| ------------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------- |
-| `GCP_PROJECT_ID`    | Your GCP project ID                  | `gcloud config get-value project`                                                               |
-| `GCP_SA_KEY`        | Service account JSON key (base64)   | Create key, then: `cat key.json \| base64`                                                      |
-| `BIGQUERY_PROJECT`  | BigQuery project ID                  | Your BigQuery project ID                                                                        |
-| `BIGQUERY_LOCATION` | BigQuery location/region             | e.g., `us-central1`, `europe-west4`                                                             |
+| Name                | Type | Description                          | How to Get                                                                                      |
+| ------------------- | ---- | ------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| `GCP_PROJECT_ID`    | Variable | Your GCP project ID                  | `gcloud config get-value project`                                                               |
+| `GCP_SA_KEY`        | Secret | Service account JSON key (base64)   | Create key, then: `cat key.json \| base64`                                                      |
+| `BIGQUERY_PROJECT`  | Variable | BigQuery project ID                  | Your BigQuery project ID                                                                        |
+| `BIGQUERY_LOCATION` | Variable | BigQuery location/region             | e.g., `us-central1`, `europe-west4`                                                             |
 
 ## Optional Secrets
 

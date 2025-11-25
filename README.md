@@ -1,6 +1,7 @@
 # BigQuery MCP server
 
-[![smithery badge](https://smithery.ai/badge/mcp-server-bigquery)](https://smithery.ai/server/mcp-server-bigquery)
+[![Build and Push to Docker Hub](https://github.com/timoschd/mcp-server-bigquery/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/timoschd/mcp-server-bigquery/actions/workflows/docker-publish.yml)
+[![Docker Hub](https://img.shields.io/docker/v/timoschd/mcp-server-bigquery?label=Docker%20Hub&logo=docker)](https://hub.docker.com/r/timoschd/mcp-server-bigquery)
 
 A Model Context Protocol server that provides access to BigQuery. This server enables LLMs to inspect database schemas and execute queries.
 
@@ -12,8 +13,20 @@ A Model Context Protocol server that provides access to BigQuery. This server en
 - 🎯 Dataset filtering for security and performance
 - 🚀 Dual transport support (stdio for local, HTTP/SSE for cloud deployment)
 
+## Deployment Options
+
+This server can be deployed in multiple ways to suit different use cases:
+
+- **📦 PyPI Package** - Install via `uvx` or `uv` for local use with Claude Desktop or other MCP clients
+- **🐳 Docker Hub** - Pre-built multi-architecture images available at [`timoschd/mcp-server-bigquery`](https://hub.docker.com/r/timoschd/mcp-server-bigquery)
+- **☁️ Google Cloud Run** - Deploy as a serverless HTTP/SSE endpoint with automatic scaling
+- **🔧 Local Development** - Use Podman Compose for containerized local development
+
+All deployment methods support both **stdio** (for local MCP clients) and **HTTP/SSE** (for cloud/remote access) transports.
+
 ## Table of Contents
 
+- [Deployment Options](#deployment-options)
 - [Components](#components)
 - [Configuration](#configuration)
 - [Quickstart](#quickstart)
@@ -119,7 +132,20 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 }
 ```
 
-Replace `{{PATH_TO_REPO}}`, `{{GCP_PROJECT_ID}}`, and `{{GCP_LOCATION}}` with the appropriate values.
+##### Remote Server Configuration (SSE)
+
+To connect to a remotely deployed server (e.g., on Cloud Run):
+
+```json
+"mcpServers": {
+  "bigquery": {
+    "transport": "sse",
+    "url": "https://your-server-url.run.app/messages"
+  }
+}
+```
+
+Replace `{{PATH_TO_REPO}}`, `{{GCP_PROJECT_ID}}`, `{{GCP_LOCATION}}`, and `https://your-server-url.run.app` with the appropriate values.
 
 ### Docker Deployment
 
@@ -178,7 +204,7 @@ docker run -p 8080:8080 \
   timoschd/mcp-server-bigquery:latest
 ```
 
-#### Using Podman Compose
+#### Using Podman Compose/ Docker Compose
 
 A `podman-compose.yml` file is provided for easy local development:
 
@@ -188,6 +214,10 @@ cp .env.example .env
 
 # Start the service
 podman-compose up
+```
+OR
+```bash
+docker-compose up
 ```
 
 The compose file supports configurable environment variables:
@@ -226,6 +256,8 @@ cp .github/workflows/deploy-cloud-run.yml.example .github/workflows/deploy-cloud
 # Then push to trigger deployment
 git push origin main
 ```
+
+---
 
 ## Development
 
@@ -318,6 +350,31 @@ The server supports two transport modes:
   - `POST /messages`: Send tool invocation requests
 - **Configuration**: Set `--transport http` or `MCP_TRANSPORT=http`
 
+#### Connecting MCP Clients to Remote SSE Server
+
+To connect an MCP client (like Claude Desktop or Windsurf) to a remotely deployed server using SSE transport:
+
+**Configuration example** (e.g., in `mcp_config.json` or Claude Desktop config):
+
+```json
+{
+  "mcpServers": {
+    "bigquery": {
+      "disabled": false,
+      "transport": "sse",
+      "url": "https://your-server-url.run.app/messages"
+    }
+  }
+}
+```
+
+Replace `https://your-server-url.run.app` with your actual deployment URL:
+- **Cloud Run**: `https://mcp-server-bigquery-xxxxx-uc.a.run.app`
+- **Custom domain**: `https://bigquery-mcp.yourdomain.com`
+- **Local testing**: `http://localhost:8080`
+
+The `/messages` path is required for SSE communication.
+
 ## Authentication
 
 The server supports multiple authentication methods:
@@ -333,6 +390,13 @@ The server supports multiple authentication methods:
    - Used automatically when no key file is provided
    - Works with `gcloud auth application-default login`
    - Automatically available in Google Cloud environments (Cloud Run, GCE, etc.)
+
+## Support
+
+For questions, issues, or feedback:
+- 📧 Email: [contact@timschendzielorz.com](mailto:contact@timschendzielorz.com)
+- 🐛 Issues: [GitHub Issues](https://github.com/timoschd/mcp-server-bigquery/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/timoschd/mcp-server-bigquery/discussions)
 
 ## License
 

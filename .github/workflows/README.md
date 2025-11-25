@@ -15,17 +15,26 @@ The `docker-publish.yml` workflow automatically builds and publishes Docker imag
    - Log in to Docker Hub
    - Go to Account Settings → Security → New Access Token
    - Name: `github-actions`
-   - Permissions: Read, Write, Delete
+   - Permissions: **Read & Write**
    - Copy the token (you won't see it again!)
 
 3. **Configure GitHub Secrets**:
 
    Go to your GitHub repository → Settings → Secrets and variables → Actions, and add:
 
-   | Secret Name          | Description                    | Example Value      |
-   | -------------------- | ------------------------------ | ------------------ |
-   | `DOCKERHUB_USERNAME` | Your Docker Hub username       | `yourusername`     |
-   | `DOCKERHUB_TOKEN`    | Docker Hub access token        | `dckr_pat_xxx...`  |
+   | Secret Name            | Description                              | Example Value      |
+   | ---------------------- | ---------------------------------------- | ------------------ |
+   | `DOCKERHUB_USERNAME`   | Your Docker Hub username                 | `yourusername`     |
+   | `DOCKERHUB_TOKEN`      | Docker Hub access token (for image push) | `dckr_pat_xxx...`  |
+   | `DOCKERHUB_PASSWORD`   | Your Docker Hub password (for README sync) | `your-password`  |
+
+   **Note**: The README sync feature requires your actual Docker Hub **password**, not an access token.
+   This is a limitation of the Docker Hub API. If you prefer not to store your password in GitHub Secrets,
+   you can manually update the README on Docker Hub's website instead.
+
+   **Troubleshooting**: If you encounter a "409 Conflict" error, this is usually harmless and means the README
+   is already up-to-date. The workflow will continue successfully even if this step fails (it won't block your
+   image from being published). You can also manually update the README on Docker Hub if needed.
 
 4. **Push to trigger build**:
    ```bash
@@ -38,7 +47,7 @@ The `docker-publish.yml` workflow automatically builds and publishes Docker imag
 - ✅ **Automatic tagging** based on git tags and branches
 - ✅ **Pull request builds** (without pushing)
 - ✅ **Build caching** for faster builds
-- ✅ **README sync** to Docker Hub
+- ✅ **README sync** to Docker Hub (updates repository description automatically)
 - ✅ **Manual trigger** via workflow_dispatch
 
 ### Image Tags
